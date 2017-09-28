@@ -39,7 +39,7 @@ Below are the three steps by which you can integrate FusedBulb libaray in your p
     @Override
     public void gpsLocationFetched(Location location, String placeName) {
         if (location!=null){
-           // you will get the users current location
+           // you will get user's current location
         }else {
             Toast.makeText(this,"Unable to find location",Toast.LENGTH_SHORT).show();
         }
