@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">FusedBulb</string>
+    <string name="unable_find_location">Unable to find location</string>
+
+    <string name="permission_denied_title">Permission denied</string>
+    <string name="permission_denied_message">Without this permission the app is unable to process your location.</string>
+    <string name="permission_denied_exit">EXIT</string>
+    <string name="permission_denied_retry">RETRY</string>
+
+    <string name="location_title">Permission denied</string>
+    <string name="location_message">This app wants to change your device settings:</string>
+    <string name="location_hint">Use GPS, WI-FI, and cell networks for location</string>
+    <string name="location_exit">DENY</string>
+    <string name="location_allow">ALLOW</string>
+
+</resources>
