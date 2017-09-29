@@ -12,7 +12,7 @@ dependencies {
 }
 ```
 
-Below are the three steps by which you can integrate FusedBulb libaray in your project.
+Below are the three steps by which you can integrate FusedBulb library in your project.
 
 * **Step 1**
     * Add "GpsOnListener" in your main class. By implementing this you will get below three methods with different user action.
