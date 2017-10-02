@@ -73,6 +73,10 @@ Below are the three steps by which you can integrate FusedBulb library in your p
     }
      ```
 
+ Developed By
+ ------
+ Ankur Yadav- ankuryadavaj729@gmail.com
+
 Note
 ------
 You need to make your app Multidex.
