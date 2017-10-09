@@ -37,7 +37,7 @@ Below are the three steps by which you can integrate FusedBulb library in your p
     }
 
     @Override
-    public void gpsLocationFetched(Location location, String placeName) {
+    public void gpsLocationFetched(Location location) {
         if (location!=null){
            // you will get user's current location
         }else {
