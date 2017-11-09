@@ -2,10 +2,12 @@ package com.fusedbulb;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,20 +25,31 @@ import com.fusedbulblib.interfaces.GpsOnListner;
 public class MainActivity extends AppCompatActivity implements GpsOnListner{
 
     TextView currentLocationTxt;
+    GetCurrentLocation getCurrentLocation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         TextView getLocationTxt=(TextView)findViewById(R.id.getLocationTxt);
+        TextView stopTxt=(TextView)findViewById(R.id.stopTxt);
+
         currentLocationTxt=(TextView)findViewById(R.id.currentLocationTxt);
         getLocationTxt.setTypeface(new FontTypeFace(this).MontserratRegular());
         currentLocationTxt.setTypeface(new FontTypeFace(this).MontserratRegular());
-
+        getCurrentLocation=new GetCurrentLocation(MainActivity.this);
         getLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new GetCurrentLocation(MainActivity.this).getCurrentLocation();
+                getCurrentLocation.getContinuousLocation(true).getCurrentLocation();
+            }
+        });
+
+        stopTxt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this,"Location update stop",Toast.LENGTH_SHORT).show();
+                getCurrentLocation.stopLocationUpdate();
             }
         });
     }
@@ -46,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
           if (_status==false){
               new CheckGPSDialog(this).showDialog();
           }else {
-              new GetCurrentLocation(MainActivity.this).getCurrentLocation();
+              getCurrentLocation.getCurrentLocation();
           }
     }
 
@@ -55,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
             if (deviceGpsStatus==1){
                 permissionDeniedByUser();
             }else {
-                new GetCurrentLocation(MainActivity.this).getCurrentLocation();
+                getCurrentLocation.getCurrentLocation();
             }
     }
 
@@ -63,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
     public void gpsLocationFetched(Location location) {
         if (location != null) {
             currentLocationTxt.setText(location.getLatitude()+", "+location.getLongitude());
+            Log.w("locationUpdate",currentLocationTxt.getText().toString());
            // currentLocationTxt.setText(new GetAddress(this).fetchCurrentAddress(location));
         } else {
             Toast.makeText(this, getResources().getString(R.string.unable_find_location), Toast.LENGTH_SHORT).show();
@@ -77,13 +91,31 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
         switch (requestCode) {
             case 1: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    new GetCurrentLocation(MainActivity.this).getCurrentLocation();
+                    getCurrentLocation.getContinuousLocation(true).getCurrentLocation();
                 } else {
                     permissionDeniedByUser();
                     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
                 }
                 return;
             }}
+    }
+
+    private final int REQ_LOCATION_ON = 10;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+            switch (requestCode) {
+                case REQ_LOCATION_ON:
+                    switch (resultCode) {
+                        case Activity.RESULT_OK:
+                            break;
+                        case Activity.RESULT_CANCELED:
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+            }
+
     }
 
     private void permissionDeniedByUser() {

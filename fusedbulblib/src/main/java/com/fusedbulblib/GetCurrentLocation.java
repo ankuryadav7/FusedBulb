@@ -2,6 +2,7 @@ package com.fusedbulblib;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,9 +16,13 @@ import com.fusedbulblib.playservices.PlayServiceAvailability;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationListener;
 
@@ -37,11 +42,15 @@ public class GetCurrentLocation implements LocationListener,
     }
     @Override
     public void onLocationChanged(Location location) {
-
         mCurrentLocation = location;
-        if (location.getLatitude()!=0.0){
-            gpsOnListner.gpsLocationFetched(location);
-            mGoogleApiClient.disconnect();
+        Log.w("continuousLocation",continuousLocationLocation+"");
+        if (location.getLatitude()!=0.0 && mGoogleApiClient.isConnected()==true){
+            if (continuousLocationLocation==true){
+                gpsOnListner.gpsLocationFetched(location);
+            }else {
+                gpsOnListner.gpsLocationFetched(location);
+                mGoogleApiClient.disconnect();
+            }
 
         }
     }
@@ -66,13 +75,6 @@ public class GetCurrentLocation implements LocationListener,
             activity.finish();
         }
         createLocationRequest();
-        mGoogleApiClient = new GoogleApiClient.Builder(activity)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
         PermissionControl permissionControl=new PermissionControl(activity);
         if (permissionControl.getOnlyLocationPermission(activity)==true){
             getLocation();
@@ -92,20 +94,46 @@ public class GetCurrentLocation implements LocationListener,
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 
-
-    public boolean isGPSEnabled = false;
-    boolean isNetworkEnabled = false;
     private void getLocation() {
-        isGPSEnabled = GPSCheckPoint.gpsProviderEnable(activity);
-        isNetworkEnabled = GPSCheckPoint.networkProviderEnable(activity);
+        if (mGoogleApiClient!=null){
 
-        if (!isGPSEnabled && !isNetworkEnabled) {
-            gpsOnListner.gpsStatus(false);
-        } else {
+        }else {
+            mGoogleApiClient = new GoogleApiClient.Builder(activity)
+                    .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .build();
             mGoogleApiClient.connect();
         }
 
+        LocationSettingsRequest.Builder locationSettingsRequestBuilder = new LocationSettingsRequest.Builder().addLocationRequest(mLocationRequest);
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient, locationSettingsRequestBuilder.build());
+        result.setResultCallback(mResultCallbackFromSettings);
+
     }
+
+    private ResultCallback<LocationSettingsResult> mResultCallbackFromSettings = new ResultCallback<LocationSettingsResult>() {
+        @Override
+        public void onResult(LocationSettingsResult result) {
+            final Status status = result.getStatus();
+            switch (status.getStatusCode()) {
+                case LocationSettingsStatusCodes.SUCCESS:
+                    break;
+                case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                    try {
+                        status.startResolutionForResult(activity, 10);
+                    } catch (IntentSender.SendIntentException e) {
+                    }
+                    break;
+                case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                    gpsOnListner.gpsStatus(false);
+                    break;
+            }
+        }
+    };
+
 
     protected void startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -114,4 +142,14 @@ public class GetCurrentLocation implements LocationListener,
         PendingResult<Status> pendingResult = LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
     }
 
+    boolean continuousLocationLocation=false;
+    public GetCurrentLocation getContinuousLocation(boolean update) {
+        this.continuousLocationLocation=update;
+        return this;
+    }
+
+
+    public void stopLocationUpdate() {
+        mGoogleApiClient.disconnect();
+    }
 }

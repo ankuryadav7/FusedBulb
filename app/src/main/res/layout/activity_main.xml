@@ -38,5 +38,16 @@
         android:background="@drawable/fuse_bulb_logo"
         android:layout_height="300dp" />
 
+    <TextView
+        android:id="@+id/stopTxt"
+        android:layout_width="wrap_content"
+        android:text="Stop Location Update"
+        android:layout_height="wrap_content"
+        android:padding="20sp"
+        android:textSize="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/black"/>
+
 
 </RelativeLayout>
