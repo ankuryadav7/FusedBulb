@@ -43,7 +43,6 @@ public class GetCurrentLocation implements LocationListener,
     @Override
     public void onLocationChanged(Location location) {
         mCurrentLocation = location;
-        Log.w("continuousLocation",continuousLocationLocation+"");
         if (location.getLatitude()!=0.0 && mGoogleApiClient.isConnected()==true){
             if (continuousLocationLocation==true){
                 gpsOnListner.gpsLocationFetched(location);

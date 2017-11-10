@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
         switch (requestCode) {
             case 1: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getCurrentLocation.getContinuousLocation(true).getCurrentLocation();
+                    getCurrentLocation.getCurrentLocation();
                 } else {
                     permissionDeniedByUser();
                     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
