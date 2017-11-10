@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/ankuryadav7/FusedBulb'
     gitUrl = 'https://github.com/ankuryadav7/FusedBulb.git'
 
-    libraryVersion = '1.0.0'
+    libraryVersion = '1.0.1'
 
     developerId = 'ankuryadav7'
     developerName = 'Ankur Yadav'

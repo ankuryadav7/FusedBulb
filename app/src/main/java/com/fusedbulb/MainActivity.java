@@ -41,7 +41,8 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
         getLocationTxt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getCurrentLocation.getContinuousLocation(true).getCurrentLocation();
+                getCurrentLocation.getContinuousLocation(true);
+                getCurrentLocation.getCurrentLocation();
             }
         });
 

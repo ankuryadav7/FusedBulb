@@ -143,9 +143,9 @@ public class GetCurrentLocation implements LocationListener,
     }
 
     boolean continuousLocationLocation=false;
-    public GetCurrentLocation getContinuousLocation(boolean update) {
+    public void getContinuousLocation(boolean update) {
         this.continuousLocationLocation=update;
-        return this;
+
     }
 
 
