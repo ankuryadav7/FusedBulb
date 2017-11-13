@@ -1,7 +1,7 @@
 # FusedBulb
 This is the library which uses google's FusedLocationApi for fetching the current location of the user.
 
-![FusedBulb](https://s20.postimg.org/555wczj4d/fused_bulb.png)
+![FusedBulb](https://s20.postimg.org/ub9azembx/fusedbulb_banner.jpg)
 
 Gradle
 ------
