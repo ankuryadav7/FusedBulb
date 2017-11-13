@@ -84,47 +84,13 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
         }
     }
 
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,String permissions[], int[] grantResults) {
-
-        switch (requestCode) {
-            case 1: {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getCurrentLocation.getCurrentLocation();
-                } else {
-                    permissionDeniedByUser();
-                    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-                }
-                return;
-            }}
-    }
-
-    private final int REQ_LOCATION_ON = 10;
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-            switch (requestCode) {
-                case REQ_LOCATION_ON:
-                    switch (resultCode) {
-                        case Activity.RESULT_OK:
-                            break;
-                        case Activity.RESULT_CANCELED:
-                            break;
-                        default:
-                            break;
-                    }
-                    break;
-            }
-
-    }
-
     private void permissionDeniedByUser() {
 
         new PermissionDeniedDialog(this).showDialog(new DialogClickListener() {
             @Override
             public void positiveListener(Activity context, Dialog dialog) {
-                new GetCurrentLocation(MainActivity.this).getCurrentLocation();
+                dialog.dismiss();
+                getCurrentLocation.getCurrentLocation();
             }
 
             @Override
@@ -132,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
                 dialog.dismiss();
             }
         });
-
     }
+
+
 
 }
