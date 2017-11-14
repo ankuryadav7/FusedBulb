@@ -116,12 +116,12 @@ public class PermissionResult extends AppCompatActivity {
 
 
     private void handlerCall() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                onBackPressed();
-            }
-        },500);
+        try {new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    onBackPressed();
+                }},500);}catch (Exception e){
+        }
     }
 
 }
