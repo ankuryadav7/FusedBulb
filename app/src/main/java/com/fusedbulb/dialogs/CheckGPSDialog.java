@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.fusedbulb.R;
 import com.fusedbulb.fonts.FontTypeFace;
 import com.fusedbulblib.GPSCheckPoint;
+import com.fusedbulblib.interfaces.DialogClickListener;
 import com.fusedbulblib.interfaces.GpsOnListner;
 
 
@@ -31,8 +32,10 @@ public class CheckGPSDialog{
 
     AlertDialog.Builder alertDialog;
     Dialog dialog;
-    public void showDialog() {
+    DialogClickListener dialogClickListner;
+    public void showDialog(DialogClickListener listner) {
         try {
+            dialogClickListner = listner;
             alertDialog = new AlertDialog.Builder(activity);
             LayoutInflater inflater = activity.getLayoutInflater();
             View v = inflater.inflate(R.layout.use_location_dialog, null);
@@ -64,11 +67,11 @@ public class CheckGPSDialog{
             positive_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog.dismiss();
+                    dialogClickListner.positiveListener(activity,dialog);
 
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    /*Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                     activity.startActivity(intent);
-                    gpsOnHandler();
+                    gpsOnHandler();*/
 
 
                 }
@@ -77,8 +80,8 @@ public class CheckGPSDialog{
             negative_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    dialog.dismiss();
-                    gpsOnListner.gpsPermissionDenied(1);
+                    dialogClickListner.negativeListener(activity,dialog);
+                   // gpsOnListner.gpsPermissionDenied(1);
                 }
             });
 
