@@ -58,7 +58,18 @@ public class MainActivity extends AppCompatActivity implements GpsOnListner{
     @Override
     public void gpsStatus(boolean _status) {
           if (_status==false){
-              new CheckGPSDialog(this).showDialog();
+              new CheckGPSDialog(this).showDialog(new DialogClickListener() {
+                  @Override
+                  public void positiveListener(Activity context, Dialog dialog) {
+                      dialog.dismiss();
+                      getCurrentLocation.getCurrentLocation();
+                  }
+
+                  @Override
+                  public void negativeListener(Activity context, Dialog dialog) {
+                      dialog.dismiss();
+                  }
+              });
           }else {
               getCurrentLocation.getCurrentLocation();
           }
