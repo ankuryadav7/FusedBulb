@@ -81,6 +81,14 @@ Key Feature of 1.0.3-->>Continuous location update
 
 If you want to fetch continuous location of the user then use same object of **GetCurrentLocation** class like below-: Just copy paste the below code and you will get the current loaction of user. 
 
+Add activity in Menifest File
+------
+```java
+
+<activity android:name="com.fusedbulblib.permission.PermissionResult"></activity>
+
+```
+
 ```java
 
 public class ActivityDemo extends AppCompatActivity implements GpsOnListener{
